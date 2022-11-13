@@ -5,191 +5,109 @@
 #include <QVariant>
 #include <memory>
 
-/**
- * @brief The DataCell class
- *
- * Contanis type infomation property and real value property.
- */
-class DataCell : public QObject {
-    Q_OBJECT
+#include <shared_mutex>
+#include <vector>
+
+class DataStorageAPI : QObject {
+  explicit DataStorageAPI(QObject *parent = nullptr) : QObject(parent) {}
+  virtual ~DataStorageAPI() {}
+  Q_PROPERTY(QList<QVariantMap> subjects READ subjects NOTIFY subjectsChanged)
+  Q_PROPERTY(QList<QVariantMap> records READ records NOTIFY recordsChanged)
 
 public:
-    enum DataType { Invalid, Int, String };
-    Q_ENUM(DataType)
-
-    explicit DataCell(QObject* parent = nullptr);
-    explicit DataCell(DataType type, quint32 byteSize, QVariant value, QObject* parent = nullptr);
-    explicit DataCell(const DataCell& other);
-    void swap(DataCell& dataCell);
-    DataCell& operator=(const DataCell& other);
-    bool operator==(const DataCell& other) const;
-    bool operator!=(const DataCell& other) const;
-    virtual ~DataCell();
-
-    Q_PROPERTY(DataType type READ type WRITE setType NOTIFY typeChanged)
-    Q_PROPERTY(quint32 byteSize READ byteSize WRITE setByteSize NOTIFY byteSizeChanged)
-    Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
-
-    DataType type() const;
-    void setType(DataType newType);
-
-    quint32 byteSize() const;
-    void setByteSize(quint32 newByteSize);
-
-    const QVariant& value() const;
-    void setValue(const QVariant& newValue);
-
-    template<typename T> 
-    bool setData(const T &data) {
-        return false;
-    };
-
-    template <>
-    bool setData(const std::string &data) {
-        m_type = DataType::String;
-        m_byteSize = data.size();
-        m_value = QVariant(data.c_str());
-        emit typeChanged();
-        emit byteSizeChanged();
-        emit valueChanged();
-        return true;
-    };
-
-    template <>
-    bool setData(const std::int64_t &data) {
-        m_type = DataType::Int;
-        m_byteSize = sizeof(data);
-        m_value = QVariant(data);
-        emit typeChanged();
-        emit byteSizeChanged();
-        emit valueChanged();
-        return true;
-    };
-
-    void clearData() {
-        m_type = DataType::Invalid;
-        m_byteSize = 0;
-        m_value = QVariant();
-        emit typeChanged();
-        emit byteSizeChanged();
-        emit valueChanged();
-    };
+  const QList<QVariantMap> &subjects() const;
+  const QList<QVariantMap> &records() const;
 
 signals:
-
-    void valueChanged();
-    void typeChanged();
-    void byteSizeChanged();
+  void subjectsChanged();
+  void recordsChanged();
 
 private:
-    quint32 m_byteSize;
-    DataType m_type;
-    QVariant m_value;
+  QList<QVariantMap> m_subjects;
+  QList<QVariantMap> m_records;
 };
 
-/**
- * @brief The Subject class
- *
- * subject for log content.
- */
-class Subject : public QObject {
-    Q_OBJECT
+class DataStorage final {
+  explicit DataStorage() {}
 
+  // Access Logics -----------------------------------------------------------
 public:
-    explicit Subject(QObject* parent = nullptr);
-    explicit Subject(DataCell category, DataCell name, QObject* parent = nullptr);
-    explicit Subject(const Subject& other);
-    Subject &operator=(const Subject& other);
-    bool operator==(const Subject& other) const;
-    bool operator!=(const Subject& other) const;
+  class Operator final {
+    friend DataStorage; // For construction from Storage, allow access.
+    explicit Operator(DataStorage *pStorage) : m_pStorage(pStorage) {}
+    virtual ~Operator() {}
 
-    virtual ~Subject();
+    void onDestructDataStorage() {
+      if (!m_pStorage) {
+        return;
+      }
+      std::lock_guard<std::shared_mutex> m_lock(*m_pStorage->m_pMutex);
+      m_pStorage = nullptr;
+    }
 
-    Q_PROPERTY(DataCell category READ category WRITE setCategory NOTIFY categoryChanged)
-    Q_PROPERTY(DataCell name READ name WRITE setName NOTIFY nameChanged)
+  public:
+    // access APIs
 
-    const DataCell& category() const;
-    void setCategory(const DataCell& newCategory);
+  private:
+    DataStorage *m_pStorage = nullptr;
+  };
 
-    const DataCell& name() const;
-    void setName(const DataCell& newName);
-
-
-signals:
-    void categoryChanged();
-    void nameChanged();
+  Operator *createOperator() {
+    std::lock_guard<std::shared_mutex> m_lock(*m_pMutex);
+    auto pOperator = new Operator(this);
+    m_pOperators.emplace_back(pOperator);
+    return pOperator;
+  }
 
 private:
-    DataCell m_category;
-    DataCell m_name;
-};
-
-
-/**
- * @brief The LogRecord class
- *
- * a single unit of Log data.
- */
-class LogRecord : public QObject {
-    Q_OBJECT
+  void onDestructOperator(Operator *pInstance) {
+    std::lock_guard<std::shared_mutex> m_lock(*m_pMutex);
+    m_pOperators.erase(std::remove(m_pOperators.begin(), m_pOperators.end(), pInstance), m_pOperators.end());
+  }
 
 public:
-    explicit LogRecord(QObject* parent = nullptr);
-    explicit LogRecord(DataCell subject, DataCell startDate, DataCell endDate, QObject* parent = nullptr);
-    explicit LogRecord(const LogRecord& other);
-    LogRecord &operator=(const LogRecord& other);
-    bool operator==(const LogRecord& other) const;
-    bool operator!=(const LogRecord& other) const;
-
-    virtual ~LogRecord();
-    Q_PROPERTY(DataCell subject READ subject WRITE setSubject NOTIFY subjectChanged)
-    Q_PROPERTY(DataCell startDate READ startDate WRITE setStartDate NOTIFY startDateChanged)
-    Q_PROPERTY(DataCell endDate READ endDate WRITE setEndDate NOTIFY endDateChanged)
-
-    const DataCell& subject() const;
-    void setSubject(const DataCell& newSubject);
-
-    const DataCell& startDate() const;
-    void setStartDate(const DataCell& newStartDate);
-
-    const DataCell& endDate() const;
-    void setEndDate(const DataCell& newEndDate);
-
-signals:
-    void subjectChanged();
-    void startDateChanged();
-    void endDateChanged();
+  virtual ~DataStorage() {
+    for (auto pOperator : m_pOperators) {
+      if (!pOperator) {
+        continue;
+      }
+      pOperator->onDestructDataStorage();
+    }
+  }
 
 private:
-    DataCell m_subject;
-    DataCell m_startDate;
-    DataCell m_endDate;
-};
+  std::shared_ptr<std::shared_mutex> m_pMutex;
+  std::vector<Operator *> m_pOperators;
 
-/**
- * @brief The DataStorage class
- */
-class DataStorage : public QObject {
-    Q_OBJECT
+  // Data Structures ---------------------------------------------------------
 public:
-    explicit DataStorage(QObject* parent = nullptr);
-    Q_PROPERTY(QList<Subject> subjects READ subjects WRITE setSubjects NOTIFY subjectsChanged)
-    Q_PROPERTY(QList<LogRecord> records READ records WRITE setRecords NOTIFY recordsChanged)
+  struct Subject {
+    std::string name;
+    std::string category;
+  };
 
+  struct RecordTime {
+    std::uint16_t year;
+    std::uint16_t month;
+    std::uint16_t day;
+    std::uint16_t hour;
+    std::uint16_t min;
+  };
 
-    const QList<Subject> &subjects() const;
-    void setSubjects(const QList<Subject> &newSubjects);
+  struct Record {
+    Subject subject;
+    RecordTime startTime;
+    RecordTime endTime;
+  };
 
-    const QList<LogRecord> &records() const;
-    void setRecords(const QList<LogRecord> &newRecords);
-
-signals:
-    void subjectsChanged();
-    void recordsChanged();
+  void addSubject(const Subject &subject) {
+    std::lock_guard<std::shared_mutex> m_lock(*m_pMutex);
+    m_subjects.emplace_back(subject);
+  }
 
 private:
-    QList<Subject> m_subjects;
-    QList<LogRecord> m_records;
+  std::vector<Subject> m_subjects;
+  std::vector<Record> m_records;
 };
 
 #endif // DATASTORAGE_H
