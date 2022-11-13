@@ -16,7 +16,12 @@ qt_add_executable(appLogMemoApp
 qt_add_qml_module(appLogMemoApp
     URI LogMemoApp
     VERSION 1.0
-    QML_FILES main.qml 
+    QML_FILES main.qml
+    QML_FILES NewSubjectEditor.qml
+    QML_FILES NewDateEditor.qml
+    QML_FILES SubjectViewer.qml
+    QML_FILES DateViewer.qml
+    QML_FILES RecordViewer.qml
 )
 
 set_target_properties(appLogMemoApp PROPERTIES

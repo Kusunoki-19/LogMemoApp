@@ -66,21 +66,43 @@ std::optional<Date> dateObjFromVariantMap(const QVariantMap& date) {
 
 }
 
+#include <QDebug>
+
 class DataStorage : public QObject {
     Q_OBJECT
 public:
-    explicit DataStorage(QObject* parent = nullptr);
+    explicit DataStorage(QObject* parent = nullptr){};
+    virtual ~DataStorage(){};
+
     Q_PROPERTY(QVariantList subjects READ subjects NOTIFY subjectsChanged)
     Q_PROPERTY(QVariantList records READ records NOTIFY recordsChanged)
 
 
+    const QVariantList &subjects() const;
+    const QVariantList &records() const;
+
     Q_INVOKABLE bool addRecord(const QVariantMap& subject, const QVariantMap& startDate, const QVariantMap& endDate) {
-        m_subjects.emplaceBack(QVariantMap{{"subject" , subject}, {"startDate",  startDate} ,{"endDate",  endDate}});
+        m_subjects.push_back(subject);
+        m_records.push_back(QVariantMap{{"subject" , subject}, {"startDate",  startDate} ,{"endDate",  endDate}});
+//        qDebug() << "subject   : " << subject  ;
+//        qDebug() << "startDate : " << startDate;
+//        qDebug() << "endDate   : " << endDate  ;
+        qDebug() << "m_records: " <<  m_records;
+        qDebug() << "m_subjects: " <<  m_subjects;
+
+        emit recordsChanged();
         return true;
     }
 
+
+signals:
+    void subjectsChanged();
+    void recordsChanged();
+
+private:
     QVariantList m_subjects;
     QVariantList m_records;
+
 };
 
 
