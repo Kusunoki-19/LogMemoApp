@@ -1,15 +1,13 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include <DataStorage.h>
+#include <DataStorageService.h>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-
-    qmlRegisterType<DataCell>("DataComponents", 1, 0, "DataCell");
 
     const QUrl url(u"qrc:/LogMemoApp/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

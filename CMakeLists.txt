@@ -11,6 +11,8 @@ qt_add_executable(appLogMemoApp
     main.cpp
     DataStorage.h
     DataStorage.cpp
+    DataStorageService.h
+    DataStorageService.cpp
 )
 
 qt_add_qml_module(appLogMemoApp
