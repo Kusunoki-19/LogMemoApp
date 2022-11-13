@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    qmlRegisterType<DataCell>("DataComponents", 1, 0, "DataCell");
+    qmlRegisterType<DataStorage>("DataComponents", 1, 0, "DataStorage");
 
     const QUrl url(u"qrc:/LogMemoApp/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
