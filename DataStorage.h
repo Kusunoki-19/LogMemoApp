@@ -1,46 +1,93 @@
 #ifndef DATASTORAGE_H
 #define DATASTORAGE_H
 
-#include <memory>
 #include <shared_mutex>
 #include <vector>
 
-namespace LogData {
+namespace inner {
+namespace relationship {
 
-class Accessor;
-class Storage;
+class Central;
+class Peripheral;
 
-class Accessor final {
-    friend Storage;
+/**
+ * @brief The Central class
+ *
+ * Central creates Peripheral instance,
+ * and Central is core of Peripheral instances.
+ */
+class Central {
+private:
+    friend Peripheral;
 
-    Accessor(Storage* pStorage);
-    virtual ~Accessor();
-
-    void onDestructStorage();
-
-public:
-    // access APIs
+    std::vector<Peripheral*> m_pAccessors;
+    std::shared_ptr<std::shared_mutex> m_pMutex;
 
 private:
-    Storage* m_pStorage = nullptr;
+    explicit Central();
+
+    // notify storage dead to Peripheral.
+    virtual ~Central();
+
+private:
+    // notify from Peripheral.
+    void onDestructPeripheral(Peripheral* pInstance);
+
+protected:
+    // create new Peripheral.
+    Peripheral* createPeripheral();
+
 };
 
-class Storage final {
-    friend Accessor;
-    explicit Storage();
-    virtual ~Storage();
+/**
+ * @brief The Peripheral class
+ *
+ * Peripheral
+ */
+class Peripheral {
+protected:
+    friend Central;
 
-public:
-    Accessor* createAccessor();
+    Central* m_pCentral = nullptr;
+    std::shared_ptr<std::shared_mutex> m_pMutex;
+
+    // created from storage.
+    explicit Peripheral(Central* pCentral, std::shared_mutex* pMutex);
+
+protected:
+    // notify Peripheral dead to storage.
+    virtual ~Peripheral();
 
 private:
-    void onDestructAccessor(Accessor* pInstance);
+    // notify from Central.
+    void onDestructCentral();
 
-    std::shared_ptr<std::shared_mutex> m_pMutex;
-    std::vector<Accessor*> m_pAccessors;
 
-    // Data Structures ---------------------------------------------------------
+protected:
+    virtual Central* do_getCentral() = 0;
+
 public:
+    Central *getCentral() { do_getCentral(); };
+
+};
+
+
+} // namespace relationship
+} // namespace inner
+
+
+namespace LogData {
+
+class LogAccessor final : inner::relationship::Peripheral {
+    explicit LogAccessor();
+    virtual ~LogAccessor();
+};
+
+class LogStorage final : inner::relationship::Central {
+public:
+    explicit LogStorage();
+    virtual ~LogStorage();
+
     struct Subject {
         std::string name;
         std::string category;
@@ -64,6 +111,7 @@ private:
     std::vector<Subject> m_subjects;
     std::vector<Record> m_records;
 };
+
 
 } // namespace LogData
 
