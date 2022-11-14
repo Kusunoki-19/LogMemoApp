@@ -16,5 +16,4 @@ Column {
         Label { text: "category: "}
         Label { text: root.subject.category }
     }
-
 }
