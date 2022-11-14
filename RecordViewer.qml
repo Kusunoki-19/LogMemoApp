@@ -24,7 +24,6 @@ Pane {
             title : "end date"
             date: root.record.endDate
         }
-    }
-
+    } 
 }
 
