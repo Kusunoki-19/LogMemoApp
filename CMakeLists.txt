@@ -20,6 +20,7 @@ qt_add_qml_module(appLogMemoApp
     QML_FILES NewSubjectEditor.qml
     QML_FILES NewDateEditor.qml
     QML_FILES SubjectViewer.qml
+    QML_FILES SubjectSelector.qml
     QML_FILES DateViewer.qml
     QML_FILES RecordViewer.qml
 )

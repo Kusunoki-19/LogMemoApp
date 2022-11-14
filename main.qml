@@ -22,7 +22,7 @@ ApplicationWindow {
             Column {
                 Label { text: "addRecord" }
 
-                NewSubjectEditor {
+                SubjectSelector {
                     id:subjectEditor
                 }
 

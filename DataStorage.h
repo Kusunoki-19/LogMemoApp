@@ -82,13 +82,8 @@ public:
     const QVariantList &categories() const;
     const QVariantList &records() const;
 
-    Q_INVOKABLE bool addRecord(const QVariantMap& subject, const QVariantMap& startDate, const QVariantMap& endDate) {
-        m_subjects.push_back(subject);
-        m_categories.push_back(subject["category"]);
-        m_records.push_back(QVariantMap{{"subject" , subject}, {"startDate",  startDate} ,{"endDate",  endDate}});
-        emit recordsChanged();
-        return true;
-    }
+    Q_INVOKABLE bool addSubject(const QVariantMap& subject);
+    Q_INVOKABLE bool addRecord(const QVariantMap& subject, const QVariantMap& startDate, const QVariantMap& endDate);
 
 signals:
     void subjectsChanged();
