@@ -71,7 +71,7 @@ std::optional<Date> dateObjFromVariantMap(const QVariantMap& date) {
 class DataStorage : public QObject {
     Q_OBJECT
 public:
-    explicit DataStorage(QObject* parent = nullptr){};
+    explicit DataStorage(QObject* parent = nullptr);;
     virtual ~DataStorage(){};
 
     Q_PROPERTY(QVariantList records READ records NOTIFY recordsChanged)

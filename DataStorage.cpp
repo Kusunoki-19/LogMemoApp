@@ -1,4 +1,25 @@
 #include "DataStorage.h"
+#include <QSettings>
+
+DataStorage::DataStorage(QObject *parent){
+    QSettings settings;
+    m_records = settings.value("m_records").value<QVariantList>();
+    m_subjects = settings.value("m_subjects").value<QVariantList>();
+    m_categories = settings.value("m_categories").value<QStringList>();
+
+    connect(this, &DataStorage::recordsChanged, this, [=]() {
+        QSettings settings;
+        settings.setValue("m_records", m_records);
+    });
+    connect(this, &DataStorage::subjectsChanged, this, [=]() {
+        QSettings settings;
+        settings.setValue("m_subjects", m_subjects);
+    });
+    connect(this, &DataStorage::categoriesChanged, this, [=]() {
+        QSettings settings;
+        settings.setValue("m_categories", m_categories);
+    });
+}
 
 const QVariantList &DataStorage::records() const
 {
