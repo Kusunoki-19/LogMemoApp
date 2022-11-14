@@ -6,8 +6,11 @@ import DataComponents 1.0
 
 ComboBox {
     id:control
+    width:parent.width
+
     readonly property string currentCategory : currentValue !== undefined ? currentValue : ""
     readonly property var subjectAndLastEmptyOne : DataStorage.categories.concat("---")
+
     model: subjectAndLastEmptyOne
 
     displayText: {
@@ -39,6 +42,7 @@ ComboBox {
 
     Creator {
         id:newSubjectEditor
+        implicitWidth:control.width
         onAddedCategory: {
             control.currentIndex = (control.model.length - 2)
         }

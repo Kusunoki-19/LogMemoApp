@@ -51,6 +51,7 @@ Column {
 
         Creator {
             id:newSubjectEditor
+            implicitWidth:control.width
             onAddedSubject: {
                 control.currentIndex = (control.model.length - 2)
             }

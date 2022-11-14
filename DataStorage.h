@@ -74,28 +74,36 @@ public:
     explicit DataStorage(QObject* parent = nullptr){};
     virtual ~DataStorage(){};
 
+    Q_PROPERTY(QVariantList records READ records NOTIFY recordsChanged)
     Q_PROPERTY(QVariantList subjects READ subjects NOTIFY subjectsChanged)
     Q_PROPERTY(QStringList categories READ categories NOTIFY categoriesChanged)
-    Q_PROPERTY(QVariantList records READ records NOTIFY recordsChanged)
 
+    const QVariantList &records() const;
     const QVariantList &subjects() const;
     const QStringList &categories() const;
-    const QVariantList &records() const;
 
+    Q_INVOKABLE bool addRecord(const QVariantMap& subject, const QVariantMap& startDate, const QVariantMap& endDate);
     Q_INVOKABLE bool addSubject(const QVariantMap& subject);
     Q_INVOKABLE bool addCategory(const QString& category);
-    Q_INVOKABLE bool addRecord(const QVariantMap& subject, const QVariantMap& startDate, const QVariantMap& endDate);
 
 signals:
+    void recordsChanged();
     void subjectsChanged();
     void categoriesChanged();
-    void recordsChanged();
 
 private:
+    QVariantList m_records;
     QVariantList m_subjects;
     QStringList m_categories;
-    QVariantList m_records;
 };
+
+namespace details {
+
+bool tryAddRecord (QVariantList& records, const QVariantMap& record);
+bool tryAddSubject (QVariantList& subjects, const QVariantMap& subject);
+bool tryAddCategory (QStringList& categories, const QString& category);
+
+}
 
 
 #endif // DATASTORAGE_H

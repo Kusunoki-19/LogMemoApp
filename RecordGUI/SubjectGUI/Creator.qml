@@ -11,18 +11,24 @@ Popup {
     signal addedSubject
 
     contentItem : Column {
-        Label { text: "New Subject" }
-        Grid {
-            columns:1
-            verticalItemAlignment:Grid.AlignVCenter
+        width: root.availableWidth
 
-            Label { text: "name" }
-            TextField { id: inputSubjectName }
+        Label {
+            text: "New Subject"
+        }
 
+        Column {
+            width:parent.width
+            Label {
+                text: "name"
+            }
+            TextField {
+                id: inputSubjectName
+
+            }
             CategoryGUI.Selector{
                 id:inputSubjectCategory
             }
-
             Button {
                 text:"Add"
                 onClicked : {

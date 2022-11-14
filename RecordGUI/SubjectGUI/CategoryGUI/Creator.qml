@@ -11,7 +11,7 @@ Popup {
     contentItem : Column {
         Label { text: "New Category" }
         Grid {
-            rows:1
+            columns:1
             verticalItemAlignment:Grid.AlignVCenter
 
             Label { text: "category" }
