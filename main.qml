@@ -13,13 +13,6 @@ ApplicationWindow {
     Material.theme: Material.Dark
     Material.accent: Material.Purple
 
-    DataStorage {
-        id: dataStorage
-        onRecordsChanged: {
-            console.log("onRecordsChanged : ", dataStorage.records.length)
-        }
-    }
-
     Flickable {
         anchors.fill:parent
         contentWidth: recordCreatorAndViewer.width
@@ -44,14 +37,14 @@ ApplicationWindow {
                 Button {
                     text:"submit"
                     onClicked: {
-                        dataStorage.addRecord(subjectEditor.getMapObject(), startDateEditor.getMapObject(), endDateEditor.getMapObject())
+                        DataStorage.addRecord(subjectEditor.getMapObject(), startDateEditor.getMapObject(), endDateEditor.getMapObject())
                     }
                 }
             }
 
             Column {
                 Repeater {
-                    model:dataStorage.records
+                    model:DataStorage.records
                     delegate: RecordViewer {
                         record:modelData
                     }

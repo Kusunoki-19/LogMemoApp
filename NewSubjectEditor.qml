@@ -5,6 +5,7 @@ import DataComponents 1.0
 
 Column {
     Label { text: "New Subject" }
+
     Row {
         Row {
             Label { text: "name" }
