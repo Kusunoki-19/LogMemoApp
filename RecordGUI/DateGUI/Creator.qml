@@ -7,29 +7,23 @@ Item {
     id:root
     width:dataInputArea.width
     height:dataInputArea.height
-
-    function getMapObject () {
-        let mapObj =  {
-            "year"  : parseInt(inputYear.text  ),
-            "month" : parseInt(inputMonth.text ),
-            "day"   : parseInt(inputDay.text   ),
-            "hour"  : parseInt(inputHour.text  ),
-            "min"   : parseInt(inputMin.text   ),
-        }
-        console.log("year  , ", mapObj.year     )
-        console.log("month , ", mapObj.month    )
-        console.log("day   , ", mapObj.day      )
-        console.log("hour  , ", mapObj.hour     )
-        console.log("min   , ", mapObj.min      )
-
-        return mapObj
+    property string title : "New Date"
+    readonly property int year  : parseInt(inputYear.text  )
+    readonly property int month : parseInt(inputMonth.text )
+    readonly property int day   : parseInt(inputDay.text   )
+    readonly property int hour  : parseInt(inputHour.text  )
+    readonly property int min   : parseInt(inputMin.text   )
+    readonly property var dateObject : {
+        "year"  : year  ,
+        "month" : month ,
+        "day"   : day   ,
+        "hour"  : hour  ,
+        "min"   : min   ,
     }
 
     function setToCurrent() {
-
         let locale = Qt.locale()
         let currentTime = new Date()
-
         inputYear   .text = parseInt(currentTime.toLocaleString(locale, "yyyy"))
         inputMonth  .text = parseInt(currentTime.toLocaleString(locale, "MM"))
         inputDay    .text = parseInt(currentTime.toLocaleString(locale, "dd"))
@@ -47,49 +41,41 @@ Item {
             rows:1
             spacing:10
             verticalItemAlignment: Grid.AlignVCenter
+            Label { text: root.title }
+        }
 
-            Label { text: "New Date" }
-
+        Grid {
+            rows:1
+            verticalItemAlignment:Grid.AlignVCenter
             Button {
-                text: "set to current"
+                text: "Set by current time"
                 onClicked: {
                     root.setToCurrent()
                 }
             }
-        }
-
-        Grid {
-            columns:5
-            rows:2
-            flow:Grid.TopToBottom
-
-            Label { text: "year" }
             TextField {
                 id: inputYear;
+                placeholderText: "YYYY"
                 validator: IntValidator{bottom: 0; top: 9999;}
             }
-
-            Label { text: "month" }
             TextField {
                 id: inputMonth;
+                placeholderText: "MM"
                 validator: IntValidator{bottom: 1; top: 12;}
             }
-
-            Label { text: "day" }
             TextField {
                 id: inputDay;
+                placeholderText: "dd"
                 validator: IntValidator{bottom: 1; top: 31;}
             }
-
-            Label { text: "hour" }
             TextField {
                 id: inputHour;
+                placeholderText: "hh"
                 validator: IntValidator{bottom: 0; top: 23;}
             }
-
-            Label { text: "min" }
             TextField {
                 id: inputMin;
+                placeholderText:"mm"
                 validator: IntValidator{bottom: 0; top: 59;}
             }
         }

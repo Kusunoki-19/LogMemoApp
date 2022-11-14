@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-//    qmlRegisterType<DataStorage>("DataComponents", 1, 0, "DataStorage");
     qmlRegisterSingletonType<DataStorage>("DataComponents", 1, 0, "DataStorage", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)

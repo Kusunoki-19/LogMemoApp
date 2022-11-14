@@ -4,6 +4,9 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import DataComponents 1.0
 
+import "DateGUI" as DateGUI
+import "SubjectGUI" as SubjectGUI
+
 Pane {
     id:root
     property var record
@@ -11,16 +14,16 @@ Pane {
     contentHeight:viewer.height
     Column {
         id:viewer
-        SubjectViewer {
+        SubjectGUI.Viewer {
             subject: root.record.subject
         }
 
-        DateViewer {
+        DateGUI.Viewer {
             title : "start date"
             date: root.record.startDate
         }
 
-        DateViewer {
+        DateGUI.Viewer {
             title : "end date"
             date: root.record.endDate
         }

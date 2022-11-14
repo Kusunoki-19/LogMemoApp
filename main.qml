@@ -4,8 +4,12 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import DataComponents 1.0
 
+import "RecordGUI" as RecordGUI
+import "RecordGUI/DateGUI" as DateGUI
+import "RecordGUI/SubjectGUI" as SubjectGUI
+
 ApplicationWindow {
-    width: 640
+    width: recordCreatorAndViewer.width
     height: 480
     visible: true
     title: qsTr("Hello World")
@@ -19,33 +23,14 @@ ApplicationWindow {
         contentHeight: recordCreatorAndViewer.height
         Column {
             id:recordCreatorAndViewer
-            Column {
-                Label { text: "addRecord" }
 
-                SubjectSelector {
-                    id:subjectEditor
-                }
-
-                NewDateEditor {
-                    id:startDateEditor
-                }
-
-                NewDateEditor {
-                    id:endDateEditor
-                }
-
-                Button {
-                    text:"submit"
-                    onClicked: {
-                        DataStorage.addRecord(subjectEditor.getMapObject(), startDateEditor.getMapObject(), endDateEditor.getMapObject())
-                    }
-                }
+            RecordGUI.Creator {
             }
 
             Column {
                 Repeater {
                     model:DataStorage.records
-                    delegate: RecordViewer {
+                    delegate: RecordGUI.Viewer {
                         record:modelData
                     }
                 }

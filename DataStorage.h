@@ -75,14 +75,15 @@ public:
     virtual ~DataStorage(){};
 
     Q_PROPERTY(QVariantList subjects READ subjects NOTIFY subjectsChanged)
-    Q_PROPERTY(QVariantList categories READ categories NOTIFY categoriesChanged)
+    Q_PROPERTY(QStringList categories READ categories NOTIFY categoriesChanged)
     Q_PROPERTY(QVariantList records READ records NOTIFY recordsChanged)
 
     const QVariantList &subjects() const;
-    const QVariantList &categories() const;
+    const QStringList &categories() const;
     const QVariantList &records() const;
 
     Q_INVOKABLE bool addSubject(const QVariantMap& subject);
+    Q_INVOKABLE bool addCategory(const QString& category);
     Q_INVOKABLE bool addRecord(const QVariantMap& subject, const QVariantMap& startDate, const QVariantMap& endDate);
 
 signals:
@@ -92,7 +93,7 @@ signals:
 
 private:
     QVariantList m_subjects;
-    QVariantList m_categories;
+    QStringList m_categories;
     QVariantList m_records;
 };
 
