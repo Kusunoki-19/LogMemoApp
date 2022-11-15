@@ -82,9 +82,16 @@ public:
     const QVariantList &subjects() const;
     const QStringList &categories() const;
 
-    Q_INVOKABLE bool addRecord(const QVariantMap& subject, const QVariantMap& startDate, const QVariantMap& endDate);
+    Q_INVOKABLE bool addRecord(const QVariantMap& record);
     Q_INVOKABLE bool addSubject(const QVariantMap& subject);
     Q_INVOKABLE bool addCategory(const QString& category);
+
+    Q_INVOKABLE bool removeRecord(const QVariantMap& record);
+    Q_INVOKABLE bool removeSubject(const QVariantMap& subject);
+    Q_INVOKABLE bool removeCategory(const QString& category);
+    Q_INVOKABLE bool removeRecord(int index);
+    Q_INVOKABLE bool removeSubject(int index);
+    Q_INVOKABLE bool removeCategory(int index);
 
 signals:
     void recordsChanged();

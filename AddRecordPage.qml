@@ -15,12 +15,15 @@ Column{
         width:parent.width
     }
     ListView {
-        clip:true
+        id:recordList
         width:parent.width
         height:parent.height - recordCreator.height
         model:DataStorage.records.reverse()
+
         delegate: RecordGUI.Viewer {
             record:modelData
+            recordIndex:(DataStorage.records.length-1) - index
+            width: recordList.width
         }
     }
 }

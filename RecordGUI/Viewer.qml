@@ -10,10 +10,13 @@ import "SubjectGUI" as SubjectGUI
 Pane {
     id:root
     property var record
-    contentWidth:viewer.width
-    contentHeight:viewer.height
+    property int recordIndex
+    contentHeight: viewer.height
+
     Column {
         id:viewer
+        width:parent.width
+
         SubjectGUI.Viewer {
             subject: root.record.subject
         }
@@ -27,6 +30,15 @@ Pane {
             title : "end date"
             date: root.record.endDate
         }
-    } 
+    }
+
+    Button {
+        text:root.recordIndex
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        onClicked: {
+            DataStorage.removeRecord(root.recordIndex)
+        }
+    }
 }
 

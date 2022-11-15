@@ -21,14 +21,14 @@ ApplicationWindow {
             id:menu
             width:parent.width
             Button {
-                text:"AddRecord"
+                text:"Add Record"
                 onClicked :{
                     views.x = Qt.binding(function(){return -pageAddRecord.x})
                 }
 
             }
             Button {
-                text:"Timeline"
+                text:"Time Sheet"
                 onClicked :{
                     views.x = Qt.binding(function(){return -pageTimeline.x})
                 }
@@ -54,7 +54,6 @@ ApplicationWindow {
                     id:pageTimeline
                     width:contentFrame.width
                     height:contentFrame.height
-
                 }
             }
         }

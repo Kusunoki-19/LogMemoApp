@@ -36,8 +36,7 @@ const QStringList &DataStorage::categories() const
     return m_categories;
 }
 
-bool DataStorage::addRecord(const QVariantMap &subject, const QVariantMap &startDate, const QVariantMap &endDate) {
-    QVariantMap record {{"subject" , subject}, {"startDate",  startDate} ,{"endDate",  endDate}};
+bool DataStorage::addRecord(const QVariantMap &record) {
 
     if (details::tryAddRecord(m_records, record)) {
         emit recordsChanged();
@@ -68,6 +67,48 @@ bool DataStorage::addCategory(const QString &category)
     else {
         return false;
     }
+}
+
+bool DataStorage::removeRecord(const QVariantMap &record)
+{
+    m_records.removeAll(record);
+    emit recordsChanged();
+    return true;
+}
+
+bool DataStorage::removeSubject(const QVariantMap &subject)
+{
+    m_subjects.removeAll(subject);
+    emit subjectsChanged();
+    return true;
+}
+
+bool DataStorage::removeCategory(const QString &category)
+{
+    m_categories.removeAll(category);
+    emit categoriesChanged();
+    return true;
+}
+
+bool DataStorage::removeRecord(int index)
+{
+    m_records.removeAt(index);
+    emit recordsChanged();
+    return true;
+}
+
+bool DataStorage::removeSubject(int index)
+{
+    m_subjects.removeAt(index);
+    emit subjectsChanged();
+    return true;
+}
+
+bool DataStorage::removeCategory(int index)
+{
+    m_categories.removeAt(index);
+    emit categoriesChanged();
+    return true;
 }
 
 bool details::tryAddRecord(QVariantList &records, const QVariantMap &record)

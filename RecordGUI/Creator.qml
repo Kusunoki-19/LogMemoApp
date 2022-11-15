@@ -41,7 +41,7 @@ Column {
     Button {
         text:"submit"
         onClicked: {
-            DataStorage.addRecord(subjectSelector.subjectObject, startDateCreator.dateObject, endDateCreator.dateObject)
+            DataStorage.addRecord({"subject": subjectSelector.subjectObject, "startDate": startDateCreator.dateObject, "endDate": endDateCreator.dateObject})
         }
         width:parent.width
     }
