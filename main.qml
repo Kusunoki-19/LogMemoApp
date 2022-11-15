@@ -60,6 +60,11 @@ ApplicationWindow {
                     id:pageTimeSheet
                     width:contentFrame.width
                     height:contentFrame.height
+                    TimeSheetPage {
+                        id: timeSheetPage
+                        anchors.fill: parent
+                        day:parseInt((new Date()).toLocaleString(Qt.locale(), "dd"))
+                    }
                 }
                 Item {
                     id:pageStatics
