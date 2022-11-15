@@ -30,7 +30,13 @@ ApplicationWindow {
             Button {
                 text:"Time Sheet"
                 onClicked :{
-                    views.x = Qt.binding(function(){return -pageTimeline.x})
+                    views.x = Qt.binding(function(){return -pageTimeSheet.x})
+                }
+            }
+            Button {
+                text:"Statics"
+                onClicked :{
+                    views.x = Qt.binding(function(){return -pageStatics.x})
                 }
             }
         }
@@ -51,7 +57,12 @@ ApplicationWindow {
                     }
                 }
                 Item {
-                    id:pageTimeline
+                    id:pageTimeSheet
+                    width:contentFrame.width
+                    height:contentFrame.height
+                }
+                Item {
+                    id:pageStatics
                     width:contentFrame.width
                     height:contentFrame.height
                 }

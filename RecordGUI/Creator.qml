@@ -36,6 +36,7 @@ Column {
     DateGUI.Creator {
         id:endDateCreator
         width:parent.width
+        autoSetMode:true
     }
 
     Button {

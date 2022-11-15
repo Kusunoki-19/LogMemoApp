@@ -15,6 +15,7 @@ Column{
         width:parent.width
     }
     ListView {
+        clip:true
         id:recordList
         width:parent.width
         height:parent.height - recordCreator.height

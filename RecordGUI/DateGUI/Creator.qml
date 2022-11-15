@@ -8,6 +8,7 @@ RowLayout{
     id:root
     width:parent.width
     height:50
+    property bool autoSetMode : false
 
     readonly property int year  : parseInt(inputYear.text  )
     readonly property int month : parseInt(inputMonth.text )
@@ -36,18 +37,29 @@ RowLayout{
 
 
     Button {
-        text: "Set by current time"
+        text: "Current"
+        visible:!root.autoSetMode
         Layout.fillWidth: true
         Layout.fillHeight: true
         onClicked: {
             root.setToCurrent()
         }
     }
+    Label {
+        text:"[Now]"
+        visible:root.autoSetMode
+        Timer {
+            interval: 1000*5; running:parent.visible; repeat:true
+            onTriggered: root.setToCurrent()
+        }
+    }
+
     TextField {
         id: inputYear;
         Layout.fillWidth: true
         Layout.fillHeight: true
         placeholderText: "YYYY"
+        enabled:!root.autoSetMode
         validator: IntValidator{bottom: 0; top: 9999;}
     }
     TextField {
@@ -55,6 +67,7 @@ RowLayout{
         Layout.fillWidth: true
         Layout.fillHeight: true
         placeholderText: "MM"
+        enabled:!root.autoSetMode
         validator: IntValidator{bottom: 1; top: 12;}
     }
     TextField {
@@ -62,6 +75,7 @@ RowLayout{
         Layout.fillWidth: true
         Layout.fillHeight: true
         placeholderText: "dd"
+        enabled:!root.autoSetMode
         validator: IntValidator{bottom: 1; top: 31;}
     }
     TextField {
@@ -69,6 +83,7 @@ RowLayout{
         Layout.fillWidth: true
         Layout.fillHeight: true
         placeholderText: "hh"
+        enabled:!root.autoSetMode
         validator: IntValidator{bottom: 0; top: 23;}
     }
     TextField {
@@ -76,6 +91,7 @@ RowLayout{
         Layout.fillWidth: true
         Layout.fillHeight: true
         placeholderText:"mm"
+        enabled:!root.autoSetMode
         validator: IntValidator{bottom: 0; top: 59;}
     }
 }
