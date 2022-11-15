@@ -1,13 +1,14 @@
 import QtQuick
+import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import DataComponents 1.0
 
-Item {
+RowLayout{
     id:root
-    width:dataInputArea.width
-    height:dataInputArea.height
-    property string title : "New Date"
+    width:parent.width
+    height:50
+
     readonly property int year  : parseInt(inputYear.text  )
     readonly property int month : parseInt(inputMonth.text )
     readonly property int day   : parseInt(inputDay.text   )
@@ -33,51 +34,48 @@ Item {
 
     Component.onCompleted: setToCurrent()
 
-    Column{
-        id:dataInputArea
 
-        Grid {
-            columns:2
-            rows:1
-            spacing:10
-            verticalItemAlignment: Grid.AlignVCenter
-            Label { text: root.title }
+    Button {
+        text: "Set by current time"
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        onClicked: {
+            root.setToCurrent()
         }
-
-        Grid {
-            rows:1
-            verticalItemAlignment:Grid.AlignVCenter
-            Button {
-                text: "Set by current time"
-                onClicked: {
-                    root.setToCurrent()
-                }
-            }
-            TextField {
-                id: inputYear;
-                placeholderText: "YYYY"
-                validator: IntValidator{bottom: 0; top: 9999;}
-            }
-            TextField {
-                id: inputMonth;
-                placeholderText: "MM"
-                validator: IntValidator{bottom: 1; top: 12;}
-            }
-            TextField {
-                id: inputDay;
-                placeholderText: "dd"
-                validator: IntValidator{bottom: 1; top: 31;}
-            }
-            TextField {
-                id: inputHour;
-                placeholderText: "hh"
-                validator: IntValidator{bottom: 0; top: 23;}
-            }
-            TextField {
-                id: inputMin;
-                placeholderText:"mm"
-                validator: IntValidator{bottom: 0; top: 59;}
-            }
-        }
+    }
+    TextField {
+        id: inputYear;
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        placeholderText: "YYYY"
+        validator: IntValidator{bottom: 0; top: 9999;}
+    }
+    TextField {
+        id: inputMonth;
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        placeholderText: "MM"
+        validator: IntValidator{bottom: 1; top: 12;}
+    }
+    TextField {
+        id: inputDay;
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        placeholderText: "dd"
+        validator: IntValidator{bottom: 1; top: 31;}
+    }
+    TextField {
+        id: inputHour;
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        placeholderText: "hh"
+        validator: IntValidator{bottom: 0; top: 23;}
+    }
+    TextField {
+        id: inputMin;
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        placeholderText:"mm"
+        validator: IntValidator{bottom: 0; top: 59;}
     }
 }

@@ -9,34 +9,55 @@ import "RecordGUI/DateGUI" as DateGUI
 import "RecordGUI/SubjectGUI" as SubjectGUI
 
 ApplicationWindow {
-    width: recordCreatorAndViewer.width
-    height: 480
+    id:window
     visible: true
-    title: qsTr("Hello World")
 
     Material.theme: Material.Dark
     Material.accent: Material.Purple
 
-    Flickable {
-        anchors.fill:parent
-        contentWidth: recordCreatorAndViewer.width
-        contentHeight: recordCreatorAndViewer.height
-        Column {
-            id:recordCreatorAndViewer
+    Column{
+        anchors.fill: parent
+        Row {
+            id:menu
+            width:parent.width
+            Button {
+                text:"AddRecord"
+                onClicked :{
+                    views.x = Qt.binding(function(){return -pageAddRecord.x})
+                }
 
-            RecordGUI.Creator {
             }
-
-            Column {
-                Repeater {
-                    model:DataStorage.records
-                    delegate: RecordGUI.Viewer {
-                        record:modelData
+            Button {
+                text:"Timeline"
+                onClicked :{
+                    views.x = Qt.binding(function(){return -pageTimeline.x})
+                }
+            }
+        }
+        Item {
+            id:contentFrame
+            width:parent.width
+            height:parent.height - menu.height
+            Row {
+                id:views
+                height:parent.height
+                Item {
+                    id:pageAddRecord
+                    width:contentFrame.width
+                    height:contentFrame.height
+                    AddRecordPage {
+                        id: recordCreatorAndViewer
+                        anchors.fill: parent
                     }
+                }
+                Item {
+                    id:pageTimeline
+                    width:contentFrame.width
+                    height:contentFrame.height
+
                 }
             }
         }
 
     }
-
 }

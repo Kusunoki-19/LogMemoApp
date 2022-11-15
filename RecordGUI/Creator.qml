@@ -8,21 +8,34 @@ import "DateGUI" as DateGUI
 import "SubjectGUI" as SubjectGUI
 
 Column {
-    Label { text: "addRecord" }
+    Label {
+        text:"select subject"
+        width:parent.width
+    }
 
     SubjectGUI.Selector {
         id:subjectSelector
-        title : "subject"
+        width:parent.width
+    }
+
+    Label {
+        text:"start date"
+        width:parent.width
     }
 
     DateGUI.Creator {
         id:startDateCreator
-        title:"start"
+        width:parent.width
+    }
+
+    Label {
+        text:"end date"
+        width:parent.width
     }
 
     DateGUI.Creator {
         id:endDateCreator
-        title:"end"
+        width:parent.width
     }
 
     Button {
@@ -30,5 +43,6 @@ Column {
         onClicked: {
             DataStorage.addRecord(subjectSelector.subjectObject, startDateCreator.dateObject, endDateCreator.dateObject)
         }
+        width:parent.width
     }
 }

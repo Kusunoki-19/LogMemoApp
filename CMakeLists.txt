@@ -17,6 +17,7 @@ qt_add_qml_module(appLogMemoApp
     URI LogMemoApp
     VERSION 1.0
     QML_FILES main.qml
+    QML_FILES AddRecordPage.qml
     QML_FILES RecordGUI/Viewer.qml
     QML_FILES RecordGUI/Creator.qml
     QML_FILES RecordGUI/DateGUI/Viewer.qml

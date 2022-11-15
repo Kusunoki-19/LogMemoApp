@@ -3,58 +3,47 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import DataComponents 1.0
 
-Column {
-    id:root
+ComboBox {
+    id:control
+
     readonly property var subjectObject : { "name" : control.currentName, "category" : control.currentCategory}
-    property string title : "Select Subject"
+    readonly property var subjectAndLastEmptyOne : DataStorage.subjects.concat([{"name":"---", "category":"---" }])
+    readonly property string currentName : currentIndex !== undefined ? model[currentIndex].name : "undefined"
+    readonly property string currentCategory : currentIndex !== undefined ? model[currentIndex].category : "undefined"
 
-    width:parent.width
-
-    Label {
-        text: root.title
+    model: subjectAndLastEmptyOne
+    displayText: {
+        return "name: " + currentName + ", category: " + currentCategory
     }
 
-    ComboBox {
-        id:control
-        width:parent.width
-        readonly property var subjectAndLastEmptyOne : DataStorage.subjects.concat([{"name":"---", "category":"---" }])
-        readonly property string currentName : currentValue !== undefined ? currentValue.name : ""
-        readonly property string currentCategory : currentValue !== undefined ? currentValue.category : ""
+    delegate: ItemDelegate {
+        required property int index
+        required property var modelData
+        readonly property bool isLastElement : (index === (control.model.length - 1))
 
-        model: subjectAndLastEmptyOne
-        displayText: {
-            return "name: " + currentName + ", category: " + currentCategory
-        }
+        implicitWidth:control.width
 
-        delegate: ItemDelegate {
-            required property int index
-            required property var modelData
-            readonly property bool isLastElement : (index === (control.model.length - 1))
-
-            implicitWidth:control.width
-
-            text: {
-                if (isLastElement) {
-                    return "+ Add New Subject..."
-                }
-                else {
-                    return index +  " name: " + modelData.name + ", category: " + modelData.category
-                }
+        text: {
+            if (isLastElement) {
+                return "+ Add New Subject..."
             }
-
-            onClicked : {
-                if (isLastElement) {
-                    newSubjectEditor.open()
-                }
+            else {
+                return index +  " name: " + modelData.name + ", category: " + modelData.category
             }
         }
 
-        Creator {
-            id:newSubjectEditor
-            implicitWidth:control.width
-            onAddedSubject: {
-                control.currentIndex = (control.model.length - 2)
+        onClicked : {
+            if (isLastElement) {
+                newSubjectEditor.open()
             }
+        }
+    }
+
+    Creator {
+        id:newSubjectEditor
+        implicitWidth:control.width
+        onAddedSubject: {
+            control.currentIndex = (control.model.length - 2)
         }
     }
 }
