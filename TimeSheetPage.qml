@@ -62,22 +62,47 @@ Item {
                 property int day : modelData
 
                 Repeater {
-                    model:DataStorage.records.filter(record => (record.startDate.day === dayRecordsContainer.day))
+                    // 今日始まり or 今日終わりのレコードが対象.
+                    model:DataStorage.records.filter(
+                              record =>
+                              (record.endDate.day === dayRecordsContainer.day)||
+                              (record.startDate.day === dayRecordsContainer.day)
+                              )
                     delegate: Pane {
                         id:pane
-                        property int recordStartMin : (modelData.startDate.hour) * 60 + (modelData.startDate.min)
-                        property int recordMinDuration : (modelData.endDate.hour - modelData.startDate.hour) * 60 + (modelData.endDate.min - modelData.startDate.min)
-                        property int colorID : modelData.subject.color !== undefined ? modelData.subject.color : Material.Red
+
+                        readonly property bool isYesterdayRecord :modelData.startDate.day === dayRecordsContainer.day - 1
+                        readonly property bool isTomorrowRecord :modelData.endDate.day === dayRecordsContainer.day + 1
+
+                        readonly property int startDateHour : (isYesterdayRecord) ?
+                                                                    0 : modelData.startDate.hour
+                        readonly property int startDateMin  : (isYesterdayRecord) ?
+                                                                    0 : modelData.startDate.min
+
+                        readonly property int endDateHour   : (isTomorrowRecord) ?
+                                                                    24 : modelData.endDate.hour
+                        readonly property int endDateMin    : (isTomorrowRecord) ?
+                                                                    0  : modelData.endDate.min
+
+                        readonly property int startMinOfDay : (startDateHour) * 60 +
+                                                               (startDateMin)
+
+                        readonly property int minDurationOfDay : (endDateHour - startDateHour) * 60 +
+                                                                  (endDateMin - startDateMin)
+
+                        readonly property int colorID : modelData.subject.color !== undefined ? modelData.subject.color : Material.Red
+
                         width: dayRecordsContainer.width
-                        height: dayRecordsContainer.height / (24*60) * recordMinDuration
-                        y: dayRecordsContainer.height / (24*60) * recordStartMin
+
+                        height: dayRecordsContainer.height / (24*60) * minDurationOfDay
+                        y: dayRecordsContainer.height / (24*60) * startMinOfDay
+
                         Material.background : pane.colorID
                         Material.elevation : 6
-                        Column{
-                            Label {
-                                text:modelData.subject.name + " ("+modelData.subject.category+")"
-                                color:Material.color(pane.colorID, Material.Shade900)
-                            }
+                        Label {
+                            text:modelData.subject.name + " ("+modelData.subject.category+")"
+                            color:Material.color(pane.colorID, Material.Shade900)
+                            anchors.verticalCenter: parent.verticalCenter
                         }
                     }
                 }
