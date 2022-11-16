@@ -19,6 +19,7 @@ qt_add_qml_module(appLogMemoApp
     QML_FILES main.qml
     QML_FILES AddRecordPage.qml
     QML_FILES TimeSheetPage.qml
+    QML_FILES CommonUI/ColorTie.qml
     QML_FILES RecordGUI/Viewer.qml
     QML_FILES RecordGUI/Creator.qml
     QML_FILES RecordGUI/DateGUI/Viewer.qml

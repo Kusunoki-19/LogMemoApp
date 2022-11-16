@@ -6,6 +6,7 @@ import DataComponents 1.0
 
 import "DateGUI" as DateGUI
 import "SubjectGUI" as SubjectGUI
+import "../CommonUI"
 
 Pane {
     id:root
@@ -15,7 +16,8 @@ Pane {
 
     Column {
         id:viewer
-        width:parent.width
+        x:colorTie.width+colorTie.x+2
+        width:parent.width -x
 
         SubjectGUI.Viewer {
             subject: root.record.subject
@@ -30,6 +32,11 @@ Pane {
             title : "end date"
             date: root.record.endDate
         }
+    }
+
+    ColorTie{
+        id:colorTie
+        colorID:root.record.subject.color !== undefined ? root.record.subject.color : Material.Red
     }
 
     Button {

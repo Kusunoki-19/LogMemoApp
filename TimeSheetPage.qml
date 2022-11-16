@@ -64,17 +64,19 @@ Item {
                 Repeater {
                     model:DataStorage.records.filter(record => (record.startDate.day === dayRecordsContainer.day))
                     delegate: Pane {
+                        id:pane
                         property int recordStartMin : (modelData.startDate.hour) * 60 + (modelData.startDate.min)
                         property int recordMinDuration : (modelData.endDate.hour - modelData.startDate.hour) * 60 + (modelData.endDate.min - modelData.startDate.min)
+                        property int colorID : modelData.subject.color !== undefined ? modelData.subject.color : Material.Red
                         width: dayRecordsContainer.width
                         height: dayRecordsContainer.height / (24*60) * recordMinDuration
                         y: dayRecordsContainer.height / (24*60) * recordStartMin
-                        Material.background : Material.Lime
+                        Material.background : pane.colorID
                         Material.elevation : 6
                         Column{
                             Label {
                                 text:modelData.subject.name + " ("+modelData.subject.category+")"
-                                color:Material.color(Material.Lime, Material.Shade900)
+                                color:Material.color(pane.colorID, Material.Shade900)
                             }
                         }
                     }
