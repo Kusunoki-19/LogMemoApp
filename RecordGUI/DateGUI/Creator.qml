@@ -70,21 +70,25 @@ RowLayout{
         id:nowSetButton
         text: "Now"
         visible:!root.autoSetMode
-        Layout.fillWidth: true
-        Layout.fillHeight: true
+        Layout.preferredWidth: 50
         onClicked: {
             root.setToCurrent()
         }
     }
-    Label {
-        width:nowSetButton.width
-        text:"[Now]"
+
+    Item {
         visible:root.autoSetMode
-        Timer {
-            interval: 1000*5; running:parent.visible; repeat:true
-            onTriggered: root.setToCurrent()
+        Layout.preferredWidth: 50
+        Label {
+            anchors.centerIn: parent
+            text:"[Now]"
+            Timer {
+                interval: 1000*5; running:parent.visible; repeat:true
+                onTriggered: root.setToCurrent()
+            }
         }
     }
+
 
     TextField {
         id: inputYear;

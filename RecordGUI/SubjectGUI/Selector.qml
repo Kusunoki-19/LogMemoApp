@@ -3,15 +3,21 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import DataComponents 1.0
 
+import "../../CommonUI"
+
 ComboBox {
     id:control
 
-    readonly property var subjectObject : { "name" : control.currentName, "category" : control.currentCategory}
+    readonly property var subjectObject : { "name" : control.currentName, "category" : control.currentCategory, "color": currentColor}
     readonly property var subjectAndLastEmptyOne : DataStorage.subjects.concat([{"name":"---", "category":"---" }])
-    readonly property string currentName : currentIndex !== undefined ? model[currentIndex].name : "undefined"
+    readonly property string currentName     : currentIndex !== undefined ? model[currentIndex].name : "undefined"
     readonly property string currentCategory : currentIndex !== undefined ? model[currentIndex].category : "undefined"
+    readonly property int    currentColor    : (currentIndex !== undefined && model[currentIndex].color !== undefined)  ? model[currentIndex].color : Material.Red
 
     model: subjectAndLastEmptyOne
+
+
+
     displayText: {
         return "name: " + currentName + ", category: " + currentCategory
     }
@@ -39,6 +45,10 @@ ComboBox {
             }
         }
 
+        ColorTie {
+            colorID:modelData.color !== undefined ? modelData.color : Material.Red
+        }
+
         Item {
             visible:!delegateComponent.isLastElement
             width:parent.height
@@ -57,6 +67,10 @@ ComboBox {
         }
     }
 
+    ColorTie {
+        colorID:control.currentColor
+    }
+
     Creator {
         id:newSubjectEditor
         implicitWidth:control.width
@@ -64,4 +78,5 @@ ComboBox {
             control.currentIndex = (control.model.length - 2)
         }
     }
+
 }
