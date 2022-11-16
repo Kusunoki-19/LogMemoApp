@@ -1,11 +1,22 @@
 #include "DataStorage.h"
 #include <QSettings>
+#include <QCoreApplication>
 
 DataStorage::DataStorage(QObject *parent){
     QSettings settings;
     m_records = settings.value("m_records").value<QVariantList>();
     m_subjects = settings.value("m_subjects").value<QVariantList>();
     m_categories = settings.value("m_categories").value<QStringList>();
+
+    /* on change organize name, execute those by new name * /
+    QCoreApplication::setOrganizationName(ORGANIZATION_NAME);
+    QCoreApplication::setOrganizationDomain(ORGANIZATION_DOMAIN);
+    QCoreApplication::setApplicationName(APPLICATION_NAME);
+    QSettings settingsTemp;
+    settingsTemp.setValue("m_records", m_records);
+    settingsTemp.setValue("m_subjects", m_subjects);
+    settingsTemp.setValue("m_categories", m_categories);
+    // */
 
     connect(this, &DataStorage::recordsChanged, this, [=]() {
         QSettings settings;
