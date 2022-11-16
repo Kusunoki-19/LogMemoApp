@@ -9,64 +9,30 @@
 #include <cstdint>
 #include <Optional>
 
-
-
-namespace details {
-
-struct Subject {
-    QString name;
-    QString category;
-};
-
-struct Date {
-    uint year;
-    uint month;
-    uint day;
-    uint hour;
-    uint min;
-};
-
-struct Record {
-    Subject subject;
-    Date startDate;
-    Date endDate;
-};
-
-
-
-/*
-std::optional<Date> dateObjFromVariantMap(const QVariantMap& date) {
-    if (date.contains("year") && date.contains("month") && date.contains("day") && date.contains("hour") && date.contains("min")) {
-        bool isConvertOK = false;
-
-        uint year =  date["year"].toUInt(&isConvertOK);
-        if (!isConvertOK) return std::nullopt;
-
-        uint month =  date["month"].toUInt(&isConvertOK);
-        if (!isConvertOK) return std::nullopt;
-
-        uint day =  date["day"].toUInt(&isConvertOK);
-        if (!isConvertOK) return std::nullopt;
-
-        uint hour =  date["hour"].toUInt(&isConvertOK);
-        if (!isConvertOK) return std::nullopt;
-
-        uint min =  date["min"].toUInt(&isConvertOK);
-        if (!isConvertOK) return std::nullopt;
-
-        return Date {
-            year, month, day, hour, min
-        };
-    }
-    else {
-        return std::nullopt;
-    }
-}
-*/
-
-}
+//namespace details {
+//struct Subject {
+//    QString name;
+//    QString category;
+//};
+//struct Date {
+//    uint year;
+//    uint month;
+//    uint day;
+//    uint hour;
+//    uint min;
+//};
+//struct Record {
+//    Subject subject;
+//    Date startDate;
+//    Date endDate;
+//};
+//}
 
 #include <QDebug>
+
+#define ORGANIZATION_NAME "Kusunoki-19"
+#define ORGANIZATION_DOMAIN "Kusunoki-19"
+#define APPLICATION_NAME "LogMemoApp"
 
 class DataStorage : public QObject {
     Q_OBJECT

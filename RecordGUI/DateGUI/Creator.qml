@@ -4,6 +4,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import DataComponents 1.0
 
+import Qt.labs.settings
+
 RowLayout{
     id:root
     width:parent.width
@@ -26,18 +28,47 @@ RowLayout{
     function setToCurrent() {
         let locale = Qt.locale()
         let currentTime = new Date()
-        inputYear   .text = parseInt(currentTime.toLocaleString(locale, "yyyy"))
-        inputMonth  .text = parseInt(currentTime.toLocaleString(locale, "MM"))
-        inputDay    .text = parseInt(currentTime.toLocaleString(locale, "dd"))
-        inputHour   .text = parseInt(currentTime.toLocaleString(locale, "hh"))
-        inputMin    .text = parseInt(currentTime.toLocaleString(locale, "mm"))
+        let year   = parseInt(currentTime.toLocaleString(locale, "yyyy"))
+        let month  = parseInt(currentTime.toLocaleString(locale, "MM"  ))
+        let day    = parseInt(currentTime.toLocaleString(locale, "dd"  ))
+        let hour   = parseInt(currentTime.toLocaleString(locale, "hh"  ))
+        let min    = parseInt(currentTime.toLocaleString(locale, "mm"  ))
+        inputYear   .text = year
+        inputMonth  .text = month
+        inputDay    .text = day
+        inputHour   .text = hour
+        inputMin    .text = min
     }
 
-    Component.onCompleted: setToCurrent()
+    Component.onCompleted: {
+        const locale = Qt.locale()
+        const currentTime = new Date()
+        inputYear   .text = settings.value("yyyy", parseInt(currentTime.toLocaleString(locale, "yyyy")))
+        inputMonth  .text = settings.value("MM"  , parseInt(currentTime.toLocaleString(locale, "MM"  )))
+        inputDay    .text = settings.value("dd"  , parseInt(currentTime.toLocaleString(locale, "dd"  )))
+        inputHour   .text = settings.value("hh"  , parseInt(currentTime.toLocaleString(locale, "hh"  )))
+        inputMin    .text = settings.value("mm"  , parseInt(currentTime.toLocaleString(locale, "mm"  )))
+    }
 
+    Component.onDestruction: {
+        settings.saveCurrentInput()
+    }
+
+    Settings {
+        id:settings
+
+        function saveCurrentInput() {
+            settings.setValue("yyyy", parseInt(inputYear .text))
+            settings.setValue("MM"  , parseInt(inputMonth.text))
+            settings.setValue("dd"  , parseInt(inputDay  .text))
+            settings.setValue("hh"  , parseInt(inputHour .text))
+            settings.setValue("mm"  , parseInt(inputMin  .text))
+        }
+    }
 
     Button {
-        text: "Current"
+        id:nowSetButton
+        text: "Now"
         visible:!root.autoSetMode
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -46,6 +77,7 @@ RowLayout{
         }
     }
     Label {
+        width:nowSetButton.width
         text:"[Now]"
         visible:root.autoSetMode
         Timer {
