@@ -43,6 +43,7 @@ Column {
         text:"submit"
         onClicked: {
             DataStorage.addRecord({"subject": subjectSelector.subjectObject, "startDate": startDateCreator.dateObject, "endDate": endDateCreator.dateObject})
+            startDateCreator.setToCurrent()
         }
         width:parent.width
     }

@@ -10,6 +10,8 @@ import "RecordGUI/SubjectGUI" as SubjectGUI
 
 Item {
     id: root
+
+
     property int day
 
     Repeater {
